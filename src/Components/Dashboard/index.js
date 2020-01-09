@@ -6,6 +6,7 @@ class Dashboard extends React.Component {
     render() {
         return(
             <div style={{maxWidth: '700px', margin: '0 auto'}}>
+                <br />
                 <h2>Attendance Dashboard</h2>
                 <br />
                 <Row>
@@ -16,7 +17,9 @@ class Dashboard extends React.Component {
                         {/* Add Student => component */}
                     </Col>
                     <Col>
-                        <Button block variant='outline-primary'>Add Cohort</Button>
+                        <Link to='/addcohort'>
+                            <Button block variant='outline-primary'>Add Cohort</Button>
+                        </Link>
                         {/* Add Cohort => component */}
                     </Col>
                 </Row>
