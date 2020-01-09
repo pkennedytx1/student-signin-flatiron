@@ -1,9 +1,46 @@
 import React from 'react'
 import { Button, Row, Col, DropdownButton, Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import StudentTable from '../StudentTable'
+import axios from 'axios'
 
 class Dashboard extends React.Component {
+    constructor(props) {
+        super(props) 
+        this.state = {
+            cohortArray: [],
+            currentCohort: '',
+            currentCohortName: ''
+        }
+    }
+
+    componentDidMount() {
+        this.handleCohortFetch()
+    }
+
+    handleCohortFetch = () => {
+        axios.get('http://localhost:3001/cohorts').then(res => res).then((data) => {
+            this.setState({ cohortArray: data.data })
+        })
+    }
+
+    handleCohortSelect = (e) => {
+        let cohort = e.target.getAttribute('value')
+        let name = e.target.getAttribute('name')
+        this.setState({ 
+            currentCohort: cohort,
+            currentCohortName: name
+        })
+        
+    }
+
+    handleDelete = () => {
+        this.setState({ currentCohort: '' })
+        this.handleCohortFetch()
+    }
+
     render() {
+        console.log(this.state)
         return(
             <div style={{maxWidth: '700px', margin: '0 auto'}}>
                 <br />
@@ -14,21 +51,29 @@ class Dashboard extends React.Component {
                         <Link to='/addstudent'>
                             <Button block variant='outline-primary'>Add Student(s)</Button>
                         </Link>
-                        {/* Add Student => component */}
                     </Col>
                     <Col>
                         <Link to='/addcohort'>
                             <Button block variant='outline-primary'>Add Cohort</Button>
                         </Link>
-                        {/* Add Cohort => component */}
                     </Col>
                 </Row>
                 <br />
                 <DropdownButton id="dropdown-basic-button" title="Dropdown button">
-                    {/* map over all cohorts */}
-                    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                    {this.state.cohortArray.length > 0 ? 
+                        <div>
+                        {this.state.cohortArray.map((cohort, i) => {
+                            return <Dropdown.Item onClick={this.handleCohortSelect} name={cohort.name} key={i} value={cohort.id} href="#/action-1">{cohort.name}</Dropdown.Item>
+                        })}
+                        </div>
+                    : null
+                    }
                 </DropdownButton>
-                {/* Select Cohort => Table with students => Specific Student */}
+                <br />
+                {this.state.currentCohort !== '' ?
+                <StudentTable handleDelete={this.handleDelete} name={this.state.currentCohortName} cohort={this.state.currentCohort}/>
+                : null
+                }
                 {/* Table Component Render Here */}
             </div>
         )

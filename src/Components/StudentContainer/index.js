@@ -1,6 +1,7 @@
 import React from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 class StudentContainer extends React.Component {
     constructor(props) {
@@ -8,13 +9,24 @@ class StudentContainer extends React.Component {
         this.state ={
             newStudentArray: [],
             studentName: '',
-            studentCohort: ''
+            studentCohort: '',
+            cohortArray: []
         }
+    }
+
+    componentDidMount() {
+        this.handleCohortFetch()
     }
 
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
+        })
+    }
+
+    handleCohortFetch = () => {
+        axios.get('http://localhost:3001/cohorts').then(res => res).then((data) => {
+            this.setState({ cohortArray: data.data })
         })
     }
 
@@ -38,7 +50,6 @@ class StudentContainer extends React.Component {
     }
 
     render() {
-        console.log(this.state)
         return(
             <div style={{maxWidth: '400px', margin: '0 auto'}} >
                 <br />
@@ -61,8 +72,9 @@ class StudentContainer extends React.Component {
                     <Form.Label>Please Choose a Cohort</Form.Label>
                     <Form.Control value={this.state.studentCohort} name='studentCohort' onChange={this.handleChange} as="select">
                         <option value='Please Select a Cohort'>Please Select a Cohort</option>
-                        <option value='01/27/20'>01/27/20</option>
-                        {/* map cohorts */}
+                        {this.state.cohortArray.map((cohort, i) => {
+                            return <option key={i} value={cohort.id} >{cohort.name}</option>
+                        })}
                     </Form.Control>
                 </Form.Group>
                 <Button onClick={this.addStudent} variant='primary'>Add Student</Button>
