@@ -40,11 +40,10 @@ class Dashboard extends React.Component {
     }
 
     render() {
-        console.log(this.state)
         return(
-            <div style={{maxWidth: '700px', margin: '0 auto'}}>
+            <div style={{maxWidth: '800px', margin: '0 auto'}}>
                 <br />
-                <h2>Attendance Dashboard</h2>
+                <h1>Attendance Dashboard</h1>
                 <br />
                 <Row>
                     <Col>
@@ -59,7 +58,7 @@ class Dashboard extends React.Component {
                     </Col>
                 </Row>
                 <br />
-                <DropdownButton id="dropdown-basic-button" title="Dropdown button">
+                <DropdownButton id="dropdown-basic-button" title="Choose a Cohort to View Attendance">
                     {this.state.cohortArray.length > 0 ? 
                         <div>
                         {this.state.cohortArray.map((cohort, i) => {
