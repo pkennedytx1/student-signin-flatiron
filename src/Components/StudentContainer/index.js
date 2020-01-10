@@ -10,6 +10,7 @@ class StudentContainer extends React.Component {
             newStudentArray: [],
             studentName: '',
             studentCohort: '',
+            studentEmail: '',
             cohortArray: []
         }
     }
@@ -31,12 +32,13 @@ class StudentContainer extends React.Component {
     }
 
     handleSelect = (e) => {
-        this.setState9({
+        this.setState({
             studentCohort: e.target.value
         })
     }
 
     addStudent = () => {
+        this.handleStudentCreate()
         let student = {
             name: this.state.studentName,
             cohort: this.state.studentCohort
@@ -45,8 +47,21 @@ class StudentContainer extends React.Component {
         this.setState({ 
             newStudentArray: newArray,
             studentName: '',
-            studentCohort: ''
+            studentCohort: '',
+            studentEmail: ''
         })
+    }
+
+    handleStudentCreate = () => {
+        let cohort_id = this.state.studentCohort
+        cohort_id = parseInt(cohort_id)
+        axios.post('http://localhost:3001/students', {
+            name: this.state.studentName,
+            email: this.state.studentEmail,
+            cohort_id,
+            tardies: 0,
+            absences: 0
+        }).then(res => res).then(data => data)
     }
 
     render() {
@@ -55,11 +70,11 @@ class StudentContainer extends React.Component {
                 <br />
                 <Link to='/dashboard'>Back to Dashboard</Link>
                 <br />
+                <br />
                 {this.state.newStudentArray.length > 0 ? 
                 <div>
-                    <h2>Added Students</h2>
                     {this.state.newStudentArray.map((student, i) => (
-                        <h6 key={i}>{`Student: ${student.name}, Cohort: ${student.cohort}`}</h6>
+                        <h6 style={{color: 'green'}} key={i}>{`${student.name} was added successfully.`}</h6>
                     ))}
                 </div>
                 : null}
@@ -67,6 +82,10 @@ class StudentContainer extends React.Component {
                 <Form.Group controlId="exampleForm.ControlInput1">
                     <Form.Label>Student Name</Form.Label>
                     <Form.Control onChange={this.handleChange} name='studentName' type="name" />
+                </Form.Group>
+                <Form.Group controlId="exampleForm.ControlInput1">
+                    <Form.Label>Student Email</Form.Label>
+                    <Form.Control onChange={this.handleChange} name='studentEmail' type="email" />
                 </Form.Group>
                 <Form.Group controlId="exampleForm.ControlSelect1">
                     <Form.Label>Please Choose a Cohort</Form.Label>
