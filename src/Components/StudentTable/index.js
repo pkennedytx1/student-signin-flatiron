@@ -38,11 +38,11 @@ class StudentTable extends React.Component {
         return(
             <div style={{position: 'relative'}}>
                 <Toast style={{ zIndex: '2', position: 'absolute', top: '-74px', right: '0'}} onClose={() => this.setState({ show: false })} show={this.state.show} delay={3000} autohide>
-                <Toast.Header style={{color: 'black', backgroundColor: '#FFC9BE'}}>
-                    <strong className="mr-auto">//FlatironAustin</strong>
-                    <small>now</small>
-                </Toast.Header>
-                <Toast.Body style={{color: 'red', backgroundColor: '#FFE8E3'}}>Please make sure all students are deleted before deleting a cohort.</Toast.Body>
+                    <Toast.Header style={{color: 'black', backgroundColor: '#FFC9BE'}}>
+                        <strong className="mr-auto">//FlatironAustin</strong>
+                        <small>now</small>
+                    </Toast.Header>
+                    <Toast.Body style={{color: 'red', backgroundColor: '#FFE8E3'}}>Please make sure all students are deleted before deleting a cohort.</Toast.Body>
                 </Toast>
                 <h2>Cohort: {this.props.name}</h2>
                 <p>Note: Students are sorted by most tardies + abesences.</p>
@@ -59,7 +59,7 @@ class StudentTable extends React.Component {
                     <tbody>
                         {this.state.studentArray.map((student, i) => {
                             return(
-                                <tr key={i}>
+                                <tr onClick={() => this.props.handleShowStudent(student.id)} key={i}>
                                     <td>{student.name}</td>
                                     <td>{student.email}</td>
                                     <td>{this.props.name}</td>

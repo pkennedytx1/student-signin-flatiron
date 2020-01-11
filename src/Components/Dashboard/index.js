@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Row, Col, DropdownButton, Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import StudentTable from '../StudentTable'
+import StudentPage from '../StudentPage'
 import axios from 'axios'
 
 class Dashboard extends React.Component {
@@ -10,7 +11,8 @@ class Dashboard extends React.Component {
         this.state = {
             cohortArray: [],
             currentCohort: '',
-            currentCohortName: ''
+            currentCohortName: '',
+            showStudentDetails: false
         }
     }
 
@@ -39,11 +41,16 @@ class Dashboard extends React.Component {
         this.handleCohortFetch()
     }
 
+    handleShowStudentDetails = (id) => {
+        console.log(id)
+        this.setState({ showStudentDetails: true })
+    }
+
     render() {
         return(
             <div style={{maxWidth: '800px', margin: '0 auto'}}>
                 <br />
-                <h1>Attendance Dashboard</h1>
+                <h1 style={{textAlign: 'center'}}><b>//Flatiron</b> Austin Attendance Dashboard</h1>
                 <br />
                 <Row>
                     <Col>
@@ -58,6 +65,10 @@ class Dashboard extends React.Component {
                     </Col>
                 </Row>
                 <br />
+                {this.state.showStudentDetails ?
+                <StudentPage />
+                :
+                <div>
                 <DropdownButton id="dropdown-basic-button" title="Choose a Cohort to View Attendance">
                     {this.state.cohortArray.length > 0 ? 
                         <div>
@@ -70,10 +81,11 @@ class Dashboard extends React.Component {
                 </DropdownButton>
                 <br />
                 {this.state.currentCohort !== '' ?
-                <StudentTable handleDelete={this.handleDelete} name={this.state.currentCohortName} cohort={this.state.currentCohort}/>
+                <StudentTable handleShowStudent={this.handleShowStudentDetails} handleDelete={this.handleDelete} name={this.state.currentCohortName} cohort={this.state.currentCohort}/>
                 : null
                 }
-                {/* Table Component Render Here */}
+                </div>
+                }
             </div>
         )
     }
