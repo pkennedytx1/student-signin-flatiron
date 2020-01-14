@@ -50,6 +50,10 @@ class StudentPage extends React.Component {
                         <h4>Total</h4>
                         <h1>2</h1>
                     </Col>
+                    <Col>
+                        <h4>Attendance</h4>
+                        <h1>92%</h1>
+                    </Col>
                 </Row>
                 <Row>
                     <Col>
