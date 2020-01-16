@@ -3,12 +3,17 @@ import { Form, Button, DropdownButton, Dropdown } from 'react-bootstrap'
 import axios from 'axios'
 import moment from 'moment'
 
-let todaysDate = moment(new Date()).format('L')
-const arriveLate = Date.parse(`${todaysDate} 09:21:00`)
-const leaveEarly = Date.parse(`${todaysDate} 16:59:00`)
-const fromSigninToOut = Date.parse(`${todaysDate} 15:00:00`)
-let dateNow = new Date()
-dateNow.getTime()
+let todaysDate
+let arriveLate
+let leaveEarly
+let fromSigninToOut
+
+(function() {
+    todaysDate = moment(new Date()).format('L')
+    arriveLate = Date.parse(`${todaysDate} 09:21:00`)
+    leaveEarly = Date.parse(`${todaysDate} 16:59:00`)
+    fromSigninToOut = Date.parse(`${todaysDate} 15:00:00`)
+})()
 
 class Signin extends React.Component {
     constructor(props) {
@@ -24,7 +29,8 @@ class Signin extends React.Component {
             studentId: '',
             time: '',
             inStatus: '',
-            outStatus: ''
+            outStatus: '',
+            signStatusArray: []
         }
     }
     
@@ -48,7 +54,8 @@ class Signin extends React.Component {
 
     handleSelectCohort = (e) => {
         let id = e.target.getAttribute('value')
-        this.setState({ cohortId: id}, () => this.handleGetStudentsByCohortId())
+        let name = e.target.getAttribute('name')
+        this.setState({ cohortId: id, cohort: name }, () => this.handleGetStudentsByCohortId())
     }
 
     handleGetStudentsByCohortId = () => {
@@ -106,6 +113,24 @@ class Signin extends React.Component {
                 out_status: this.state.outStatus
             }).then(res => res).then(data => console.log(data))
         }
+        let student = {
+            name: this.state.name,
+            cohort: this.state.cohort
+        }
+        let newArray = this.state.signStatusArray.concat(student)
+        this.setState({ 
+            signStatusArray: newArray,
+            code: '',
+            cohort: 'Please Choose Your Cohort',
+            name: 'Please Choose Your Name',
+            cohortArray: [],
+            cohortId: '',
+            studentArray: [],
+            studentId: '',
+            time: '',
+            inStatus: '',
+            outStatus: '',
+         })
     }
 
     render() {
@@ -114,13 +139,25 @@ class Signin extends React.Component {
         let inOrOut
         if (dateNow < fromSigninToOut) {
             inOrOut = 'In'
-        } inOrOut = 'Out'
+        } else {
+            inOrOut = 'Out'
+        } 
 
         return(
             <div style={{maxWidth: '450px', margin: '0 auto'}}>
                 <div>
                     <br />
                     <h2>Please Clock {inOrOut}</h2>
+                    <br />
+                    {this.state.signStatusArray.length > 0 ?
+                    <div>
+                        {this.state.signStatusArray.map((student, i) => {
+                            return <p style={{color: 'green'}} key={i}>Signed {inOrOut} {student.name} in cohort {student.cohort}</p>
+                        })}
+                    </div>
+                    :
+                    null
+                    }
                     <Form.Group controlId="exampleForm.ControlInput1">
                         <Form.Label>Enter Code</Form.Label>
                         <Form.Control value={this.state.code} onChange={this.handleChange} name='code' type="code" />
@@ -131,7 +168,7 @@ class Signin extends React.Component {
                             <Form.Label>Select Cohort</Form.Label>
                             <DropdownButton id="dropdown-basic-button" title={this.state.cohort}>
                                 {this.state.cohortArray.map((cohort, i) => {
-                                    return <Dropdown.Item onClick={this.handleSelectCohort} value={cohort.id} key={i}>{cohort.name}</Dropdown.Item>
+                                    return <Dropdown.Item onClick={this.handleSelectCohort} name={cohort.name} value={cohort.id} key={i}>{cohort.name}</Dropdown.Item>
                                 })}
                             </DropdownButton>
                         </Form.Group>
@@ -144,9 +181,9 @@ class Signin extends React.Component {
                         <Form.Group controlId="exampleForm.ControlSelect1">
                         <Form.Label>Select Name</Form.Label>
                         <DropdownButton variant='success' id="dropdown-basic-button" title={this.state.name}>
-                                {this.state.studentArray.map((student, i) => {
-                                    return <Dropdown.Item onClick={this.handleSelectStudent} name={student.name} value={student.id} key={i}>{student.name}</Dropdown.Item>
-                                })}
+                            {this.state.studentArray.map((student, i) => {
+                                return <Dropdown.Item onClick={this.handleSelectStudent} name={student.name} value={student.id} key={i}>{student.name}</Dropdown.Item>
+                            })}
                         </DropdownButton>
                         </Form.Group>
                         <Form.Group controlId="formBasicCheckbox">
