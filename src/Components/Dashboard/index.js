@@ -12,12 +12,21 @@ class Dashboard extends React.Component {
             cohortArray: [],
             currentCohort: '',
             currentCohortName: '',
-            showStudentDetails: false
+            showStudentDetails: false,
+            currentCode: ''
         }
     }
 
     componentDidMount() {
         this.handleCohortFetch()
+        this.handleCodeFetch()
+    }
+
+    handleCodeFetch = () => {
+        axios.get('http://localhost:3001/code').then(res => res).then((data) => {
+            this.setState({ currentCode: data.data })
+            console.log(data)
+        })
     }
 
     handleCohortFetch = () => {
@@ -51,6 +60,8 @@ class Dashboard extends React.Component {
             <div style={{maxWidth: '800px', margin: '0 auto'}}>
                 <br />
                 <h1 style={{textAlign: 'center'}}><b>//Flatiron</b> Austin Attendance Dashboard</h1>
+                <br />
+                <h4 style={{textAlign: 'center'}}><b>Current Code:</b> {this.state.currentCode}</h4>
                 <br />
                 <Row>
                     <Col>
