@@ -83,6 +83,8 @@ class StudentPage extends React.Component {
         return(
             <div>
                 <br />
+                <p style={{cursor: 'pointer', color: 'blue'}} onClick={() => this.props.hideDetails()}>Back to Students Table</p>
+                <br />
                 <h2 style={{textAlign: 'center'}}>Attendance Summary</h2>
                 <h4 style={{textAlign: 'center'}}>{this.state.name}</h4>
                 <hr />

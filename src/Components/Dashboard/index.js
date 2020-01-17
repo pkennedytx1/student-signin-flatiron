@@ -57,13 +57,23 @@ class Dashboard extends React.Component {
         })
     }
 
+    handleHideStudentDetails = () => {
+        this.setState({ showStudentDetails: false })
+    }
+
+    handleNewCode = () => {
+        axios.post('http://localhost:3001/newcode').then(res => res).then(data => {
+            this.setState({ currentCode: data.data })
+        })
+    }
+
     render() {
         return(
             <div style={{maxWidth: '800px', margin: '0 auto'}}>
                 <br />
                 <h1 style={{textAlign: 'center'}}><b>//Flatiron</b> Austin Attendance Dashboard</h1>
                 <br />
-                <h4 style={{textAlign: 'center'}}><b>Current Code:</b> {this.state.currentCode}</h4>
+                <h4 style={{textAlign: 'center'}}><b>Current Code:</b> {this.state.currentCode} | <Button onClick={this.handleNewCode} variant='outline-dark'>Get New Code</Button></h4>
                 <br />
                 <Row>
                     <Col>
@@ -79,7 +89,7 @@ class Dashboard extends React.Component {
                 </Row>
                 <br />
                 {this.state.showStudentDetails ?
-                <StudentPage studentCohort={this.state.currentCohortName} studentId={this.state.currentStudentId} />
+                <StudentPage hideDetails={this.handleHideStudentDetails} studentCohort={this.state.currentCohortName} studentId={this.state.currentStudentId} />
                 :
                 <div>
                 <DropdownButton id="dropdown-basic-button" title="Choose a Cohort to View Attendance">

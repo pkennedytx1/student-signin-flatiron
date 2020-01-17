@@ -30,7 +30,8 @@ class Signin extends React.Component {
             time: '',
             inStatus: '',
             outStatus: '',
-            signStatusArray: []
+            signStatusArray: [],
+            error: ''
         }
     }
     
@@ -104,7 +105,16 @@ class Signin extends React.Component {
                 date: moment(dateNow).format('L'),
                 in_status: this.state.inStatus,
                 outStatus: this.state.outStatus
-            }).then(res => res).then(date => console.log(date))
+            }).then(res => res).then((data) => {
+                console.log(data)
+                if (data.data === "You already signed in.") {
+                    this.setState({ error: data.data })
+                } else if (data.data === "Invalid Code.") {
+                    this.setState({ error: data.data })
+                } else {
+                    this.setState({ error: '' })
+                }
+            })
         } else {
             axios.post('http://localhost:3001/signouts', {
                 code: this.state.code,
@@ -123,13 +133,13 @@ class Signin extends React.Component {
             code: '',
             cohort: 'Please Choose Your Cohort',
             name: 'Please Choose Your Name',
-            cohortArray: [],
             cohortId: '',
             studentArray: [],
             studentId: '',
             time: '',
             inStatus: '',
             outStatus: '',
+            error: ''
          })
     }
 
@@ -149,8 +159,13 @@ class Signin extends React.Component {
                     <br />
                     <h2>Please Clock {inOrOut}</h2>
                     <br />
+                    {this.state.error !== '' ? 
+                    <p style={{color: 'red'}}>{this.state.error}</p>
+                    :
+                    null
+                    }
                     {this.state.signStatusArray.length > 0 ?
-                    <div>
+                    <div style={{display: this.state.error !== '' ? 'none' : null}}>
                         {this.state.signStatusArray.map((student, i) => {
                             return <p style={{color: 'green'}} key={i}>Signed {inOrOut} {student.name} in cohort {student.cohort}</p>
                         })}
