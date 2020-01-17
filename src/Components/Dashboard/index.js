@@ -13,7 +13,8 @@ class Dashboard extends React.Component {
             currentCohort: '',
             currentCohortName: '',
             showStudentDetails: false,
-            currentCode: ''
+            currentCode: '',
+            currentStudentId: ''
         }
     }
 
@@ -25,7 +26,6 @@ class Dashboard extends React.Component {
     handleCodeFetch = () => {
         axios.get('http://localhost:3001/code').then(res => res).then((data) => {
             this.setState({ currentCode: data.data })
-            console.log(data)
         })
     }
 
@@ -51,8 +51,10 @@ class Dashboard extends React.Component {
     }
 
     handleShowStudentDetails = (id) => {
-        console.log(id)
-        this.setState({ showStudentDetails: true })
+        this.setState({
+            showStudentDetails: true,
+            currentStudentId: id
+        })
     }
 
     render() {
@@ -77,7 +79,7 @@ class Dashboard extends React.Component {
                 </Row>
                 <br />
                 {this.state.showStudentDetails ?
-                <StudentPage />
+                <StudentPage studentCohort={this.state.currentCohortName} studentId={this.state.currentStudentId} />
                 :
                 <div>
                 <DropdownButton id="dropdown-basic-button" title="Choose a Cohort to View Attendance">
