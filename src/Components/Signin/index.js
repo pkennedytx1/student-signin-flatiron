@@ -4,15 +4,11 @@ import axios from 'axios'
 import moment from 'moment'
 
 let todaysDate
-let arriveLate
-let leaveEarly
 let fromSigninToOut
 
 (function() {
     todaysDate = moment(new Date()).format('L')
-    arriveLate = Date.parse(`${todaysDate} 09:21:00`)
-    leaveEarly = Date.parse(`${todaysDate} 16:59:00`)
-    fromSigninToOut = Date.parse(`${todaysDate} 15:00:00`)
+    fromSigninToOut = Date.parse(`${todaysDate} 13:00:00`)
 })()
 
 class Signin extends React.Component {
@@ -37,10 +33,6 @@ class Signin extends React.Component {
     
     componentDidMount() {
         this.handleCohortFetch()
-    }
-
-    handleInOrOut = () => {
-        // write to handle front end in or out
     }
     
     handleChange = (e) => {
@@ -78,27 +70,16 @@ class Signin extends React.Component {
         let dateNow = new Date()
         dateNow.getTime()
         if (dateNow < fromSigninToOut) {
-            if(dateNow > arriveLate) {
-                console.log('you are late.')
-                this.setState({ inStatus: 'late'}, () => this.handleSignInOutPost())
-            } else {
-                console.log('You are early')
-                this.setState({ inStatus: 'on_time'}, () => this.handleSignInOutPost())
-            }
+            this.setState({ inStatus: moment(dateNow).format('HH:mm')}, () => this.handleSignInOutPost())
         } else {
-            if(dateNow < leaveEarly) {
-                console.log('You are leaving early.')
-                this.setState({ outStatus: 'early_leave'}, () => this.handleSignInOutPost())
-            } else {
-                console.log('Have a good day!')
-                this.setState({ outStatus: 'on_time_leave'}, () => this.handleSignInOutPost())
-            }
+            this.setState({ outStatus: moment(dateNow).format('HH:mm')}, () => this.handleSignInOutPost())
         }
     }
 
     handleSignInOutPost = () => {
         let dateNow = new Date()
         if(dateNow.getTime() < fromSigninToOut) {
+            // this.handleAbsenceHolidayWeekendCheck(dateNow)
             axios.post('http://localhost:3001/signins', {
                 code: this.state.code,
                 student_id: this.state.studentId,
@@ -141,6 +122,13 @@ class Signin extends React.Component {
             outStatus: '',
             error: ''
          })
+    }
+
+    handleAbsenceHolidayWeekendCheck = (dateNow) => {
+        axios.post('http://localhost:3001/attendancecheck', {
+            student_id: this.state.studentId,
+            date: moment(dateNow).format('L'),
+        }).then(res => res).then((data) => console.log(data))
     }
 
     render() {

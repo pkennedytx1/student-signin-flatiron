@@ -26,7 +26,7 @@ class StudentPage extends React.Component {
 
     handleSigninsFetch = () => {
         axios.get(`http://localhost:3001/signins/${this.props.studentId}`).then(res => res).then((data) => {
-            this.setState({ signinsArray: data.data.reverse() })
+            this.setState({ signinsArray: data.data })
         })
     }
 
