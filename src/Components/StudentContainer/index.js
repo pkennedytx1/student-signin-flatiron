@@ -61,7 +61,7 @@ class StudentContainer extends React.Component {
             cohort_id,
             tardies: 0,
             absences: 0
-        }).then(res => res).then(data => data)
+        }).then(res => res).then(data => console.log(data))
     }
 
     render() {
